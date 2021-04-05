@@ -7,12 +7,13 @@ namespace FunctionCalculation
 
         static void Main(string[] args)
         {
-
-            Calculate(3);
+            BaseFunctionCalculator calculator = new BaseFunctionCalculator();
+            double sum = calculator.Calculate(3);
+            Console.WriteLine("Summation of function value is " + sum);
 
         }
 
-        public static void Calculate(int n)
+        public double Calculate(int n)
         {
             byte i;
             double functionSum;
@@ -21,11 +22,10 @@ namespace FunctionCalculation
             {
                 double radiansValue = (i * (Math.PI)) / 180;
                 double sinValue = Math.Sin(radiansValue) * i;
-                functionSum = functionSum + sinValue;
+                functionSum += sinValue;
             }
-            Console.WriteLine("Summation of function value is " + functionSum);
-
-
+            return functionSum;
         }
+
     }
 }
