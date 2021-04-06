@@ -7,24 +7,39 @@ namespace FunctionCalculation
 
         static void Main(string[] args)
         {
-            BaseFunctionCalculator calculator = new BaseFunctionCalculator();
-            double sum = calculator.Calculate(3);
+      
+            FunctionCalculation functionCalculation = new Function();
+            double sum = functionCalculation.Calculate(3);
             Console.WriteLine("Summation of function value is " + sum);
 
         }
 
-        public double Calculate(int n)
+
+        abstract class FunctionCalculation
         {
-            byte i;
-            double functionSum;
-            functionSum = 0;
-            for (i = 0; i <= n; i++)
+            public abstract double Calculate(int n);
+            public abstract void setCacheSize(int size);
+        }
+        class Function : FunctionCalculation
+        {
+            public override double Calculate(int n)
             {
-                double radiansValue = (i * (Math.PI)) / 180;
-                double sinValue = Math.Sin(radiansValue) * i;
-                functionSum += sinValue;
+                byte i;
+                double functionSum;
+                functionSum = 0;
+                for (i = 0; i <= n; i++)
+                {
+                    double radiansValue = (i * (Math.PI)) / 180;
+                    double sinValue = Math.Sin(radiansValue) * i;
+                    functionSum += sinValue;
+                }
+                return functionSum;
             }
-            return functionSum;
+
+            public override void setCacheSize(int size)
+            {
+                throw new NotImplementedException();
+            }
         }
 
     }
