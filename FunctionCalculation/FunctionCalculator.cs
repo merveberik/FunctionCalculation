@@ -8,31 +8,39 @@ namespace FunctionCalculation
         static void Main(string[] args)
         {
             Function functionCalculation = new BaseFunctionCalculation();
-            functionCalculation.setCacheSize(2);
+            functionCalculation.setCacheSize(5);
+            functionCalculation.Calculate(1);
             functionCalculation.Calculate(2);
             functionCalculation.Calculate(3);
+            functionCalculation.Calculate(4);
+            functionCalculation.Calculate(5);
+            functionCalculation.getCacheElement(0);
             functionCalculation.getCacheElement(1);
-
+            functionCalculation.getCacheElement(2);
+            functionCalculation.getCacheElement(3);
+            functionCalculation.getCacheElement(4);
         }
 
         abstract class Function
         {
+            public int sizeOfArray;
             public abstract double Calculate(int n);
             public abstract void setCacheSize(int size);
             public abstract int getCacheElement(int index);
         }
         class BaseFunctionCalculation : Function
         {
-            double[] sumBuffer = new double[1];
+            double[] sumBuffer = new double[5];
             double functionSum;
-            int sizeOfArray;
-
+            
+            int value;
+            int control;
             public override double Calculate(int n)
             {
-                byte j;
+                UInt16 j;
                 double sinValue;
                 functionSum = 0;
-
+                
                 for (j = 0; j <= n; j++)
                 {
                     double radiansValue = (j * (Math.PI)) / 180;
@@ -40,17 +48,26 @@ namespace FunctionCalculation
                     functionSum += sinValue;
                     
                 }
-                if (sumBuffer[sizeOfArray - 2] == 0)
+
+                if(control == 0)
                 {
-                    sumBuffer[sizeOfArray - 2] = functionSum;
+                    value = 0;
                 }
-                else if (sumBuffer[sizeOfArray - 2] != 0)
+                if (sumBuffer[0] == 0)
                 {
-                    sumBuffer[sizeOfArray - 1] = functionSum;
+                    sumBuffer[0] = functionSum;
+
+                }
+                else
+                {
+                    value++;
+                    control++;
+                    if (sumBuffer[value] == 0)
+                    {
+                        sumBuffer[value] = functionSum;
+                    }
                 }
 
-                //Console.WriteLine(sumBuffer[0]);
-                //Console.WriteLine(sumBuffer[1]);
                 return 0;
             }
 
@@ -66,10 +83,6 @@ namespace FunctionCalculation
 
             public override int getCacheElement(int index)
             {
-                //cacheElement = sumBuffer[index];
-                //Console.WriteLine(cacheElement);
-                //sumBuffer[index] = functionSum;
-
                 Console.WriteLine(sumBuffer[index]);
                 return 0;
             }
