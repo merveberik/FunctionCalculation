@@ -8,17 +8,13 @@ namespace FunctionCalculation
         static void Main(string[] args)
         {
             Function functionCalculation = new BaseFunctionCalculation();
-            functionCalculation.SetCacheSize(5);
+            functionCalculation.SetCacheSize(3);
             functionCalculation.Calculate(1);
             functionCalculation.Calculate(2);
             functionCalculation.Calculate(3);
-            functionCalculation.Calculate(4);
-            functionCalculation.Calculate(5);
             functionCalculation.GetCacheElement(0);
             functionCalculation.GetCacheElement(1);
             functionCalculation.GetCacheElement(2);
-            functionCalculation.GetCacheElement(3);
-            functionCalculation.GetCacheElement(4);
         }
 
         abstract class Function
@@ -31,8 +27,8 @@ namespace FunctionCalculation
         class BaseFunctionCalculation : Function
         {
             double[] _sumBuffer = new double[sizeOfArray];
+            int[] array = new int[3];
             double _functionSum;
-            int _control;
             public override double Calculate(int n)
             {
                 UInt16 j;
@@ -43,25 +39,19 @@ namespace FunctionCalculation
                     double radiansValue = (j * (Math.PI)) / 180;
                     var sinValue = Math.Sin(radiansValue) * j;
                     _functionSum += sinValue;
-                    
                 }
 
-                if(_control == 0)
+                if (_sumBuffer[sizeOfArray-1] == 0)
                 {
-                    sizeOfArray = 0;
-                }
-                if (_sumBuffer[0] == 0)
-                {
-                    _sumBuffer[0] = _functionSum;
+                    _sumBuffer[sizeOfArray-1] = _functionSum;
 
                 }
                 else
                 {
-                    sizeOfArray++;
-                    _control++;
-                    if (_sumBuffer[sizeOfArray] == 0)
+                    sizeOfArray--;
+                    if (_sumBuffer[sizeOfArray-1] == 0)
                     {
-                        _sumBuffer[sizeOfArray] = _functionSum;
+                        _sumBuffer[sizeOfArray-1] = _functionSum;
                     }
                 }
 
@@ -71,10 +61,6 @@ namespace FunctionCalculation
             public override void SetCacheSize(int size)
             {
                 _sumBuffer = new double[size];
-                for (var i = 0; i < size; i++)
-                {
-                    _sumBuffer[i] = 0;
-                }
                 sizeOfArray = _sumBuffer.Length;
             }
 
