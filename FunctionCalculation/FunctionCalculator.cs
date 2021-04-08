@@ -8,82 +8,79 @@ namespace FunctionCalculation
         static void Main(string[] args)
         {
             Function functionCalculation = new BaseFunctionCalculation();
-            functionCalculation.setCacheSize(5);
+            functionCalculation.SetCacheSize(5);
             functionCalculation.Calculate(1);
             functionCalculation.Calculate(2);
             functionCalculation.Calculate(3);
             functionCalculation.Calculate(4);
             functionCalculation.Calculate(5);
-            functionCalculation.getCacheElement(0);
-            functionCalculation.getCacheElement(1);
-            functionCalculation.getCacheElement(2);
-            functionCalculation.getCacheElement(3);
-            functionCalculation.getCacheElement(4);
+            functionCalculation.GetCacheElement(0);
+            functionCalculation.GetCacheElement(1);
+            functionCalculation.GetCacheElement(2);
+            functionCalculation.GetCacheElement(3);
+            functionCalculation.GetCacheElement(4);
         }
 
         abstract class Function
         {
-            public int sizeOfArray;
+            public static int sizeOfArray;
             public abstract double Calculate(int n);
-            public abstract void setCacheSize(int size);
-            public abstract int getCacheElement(int index);
+            public abstract void SetCacheSize(int size);
+            public abstract int GetCacheElement(int index);
         }
         class BaseFunctionCalculation : Function
         {
-            double[] sumBuffer = new double[5];
-            double functionSum;
-            
-            int value;
-            int control;
+            double[] _sumBuffer = new double[sizeOfArray];
+            double _functionSum;
+            int _control;
             public override double Calculate(int n)
             {
                 UInt16 j;
-                double sinValue;
-                functionSum = 0;
-                
+                _functionSum = 0;
+
                 for (j = 0; j <= n; j++)
                 {
                     double radiansValue = (j * (Math.PI)) / 180;
-                    sinValue = Math.Sin(radiansValue) * j;
-                    functionSum += sinValue;
+                    var sinValue = Math.Sin(radiansValue) * j;
+                    _functionSum += sinValue;
                     
                 }
 
-                if(control == 0)
+                if(_control == 0)
                 {
-                    value = 0;
+                    sizeOfArray = 0;
                 }
-                if (sumBuffer[0] == 0)
+                if (_sumBuffer[0] == 0)
                 {
-                    sumBuffer[0] = functionSum;
+                    _sumBuffer[0] = _functionSum;
 
                 }
                 else
                 {
-                    value++;
-                    control++;
-                    if (sumBuffer[value] == 0)
+                    sizeOfArray++;
+                    _control++;
+                    if (_sumBuffer[sizeOfArray] == 0)
                     {
-                        sumBuffer[value] = functionSum;
+                        _sumBuffer[sizeOfArray] = _functionSum;
                     }
                 }
 
                 return 0;
             }
 
-            public override void setCacheSize(int size)
+            public override void SetCacheSize(int size)
             {
-                sumBuffer = new double[size];
-                for (int i = 0; i < size; i++)
+                _sumBuffer = new double[size];
+                for (var i = 0; i < size; i++)
                 {
-                    sumBuffer[i] = 0;
+                    _sumBuffer[i] = 0;
                 }
-                sizeOfArray = sumBuffer.Length;
+                sizeOfArray = _sumBuffer.Length;
             }
 
-            public override int getCacheElement(int index)
+            public override int GetCacheElement(int index)
             {
-                Console.WriteLine(sumBuffer[index]);
+                Console.WriteLine(_sumBuffer[index]);
                 return 0;
             }
 
