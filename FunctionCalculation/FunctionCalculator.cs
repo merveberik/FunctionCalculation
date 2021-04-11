@@ -38,15 +38,15 @@ namespace FunctionCalculation
             double _functionSum, _tempSumBuffer;
             int _tempNumber;
             int[] _numberSorting;
-            bool _sameNumber, _firstCheckSameNumber = true, _doNotCalculate = true;
+            bool _sameNumber, _firstCheckSameNumber = true, _calculate = true;
 
             public override double Calculate(int n)
-            {
+            {   /* Check if the first number is same number */
                 for (int i = 0; i < index; i++)
                 {
                     if (_numberSorting[i] == n)
                     {
-                        _doNotCalculate = false;
+                        _calculate = false;
                         if (_firstCheckSameNumber == true)
                         {
                             _firstCheckSameNumber = false;
@@ -54,6 +54,7 @@ namespace FunctionCalculation
                         }
                     }
                 }
+                /* Check if queue is full delete clean last index */
                 if (index > sizeOfArray - 1)
                 {
                     index = sizeOfArray - 1;
@@ -62,7 +63,8 @@ namespace FunctionCalculation
                 _numberSorting[index] = n;
                 _sameNumber = false;
 
-                if (_doNotCalculate)
+                /* Calculate if not calculated */
+                if (_calculate)
                 {
                     _functionSum = 0;
                     for (int j = 0; j <= n; j++)
@@ -75,37 +77,33 @@ namespace FunctionCalculation
                     _sumBuffer[index] = _functionSum;
 
                 }
-                _doNotCalculate = true;
+                _calculate = true;
 
                 for (int i = 0; i < _numberSorting.Length; i++)
                 {
                     for (int j = i; j < _numberSorting.Length; j++)
                     {
+                        /* If number is zero, do not shift */
                         if (_numberSorting[j] == 0)
                         {
-                            _tempNumber = _numberSorting[j];
-                            _numberSorting[j] = _numberSorting[index];
-                            _numberSorting[j] = _tempNumber;
-                            _sameNumber = true;
                             break;
                         }
+                        /* Shift number, Check, if there is same number and different index */
                         if (_numberSorting[index] == _numberSorting[j] && index != j)
                         {
                             if (j == 0)
                             {
-                                _tempNumber = _numberSorting[j];
-                                _numberSorting[j] = _numberSorting[index];
-                                _numberSorting[j] = _tempNumber;
                                 _sameNumber = true;
                                 break;
                             }
                             else
                             {
+                                /* shift number */
                                 _tempNumber = _numberSorting[j - 1];
                                 _numberSorting[j - 1] = _numberSorting[index];
                                 _numberSorting[j] = _tempNumber;
                                 _sameNumber = true;
-
+                                /* shift result */
                                 _tempSumBuffer = _sumBuffer[j - 1];
                                 _sumBuffer[j - 1] = _sumBuffer[index];
                                 _sumBuffer[i] = _tempSumBuffer;
@@ -113,9 +111,9 @@ namespace FunctionCalculation
 
                             break;
                         }
+                        /* Shift number, Check, if there is different number and same index */
                         if (_numberSorting[i] != _numberSorting[j] && j == index)
                         {
-
                             _tempNumber = _numberSorting[j];
                             _numberSorting[j] = _numberSorting[i];
                             _numberSorting[i] = _tempNumber;
@@ -125,6 +123,7 @@ namespace FunctionCalculation
                             _sumBuffer[i] = _tempSumBuffer;
                         }
                     }
+                    /* If shift same number break loop */
                     if (_sameNumber == true)
                     {
                         break;
