@@ -38,7 +38,7 @@ namespace FunctionCalculation
             double _functionSum, _tempSumBuffer;
             int _tempNumber;
             int[] _numberSorting;
-            bool sameNumber, firstCheckSameNumber = true, doNotCalculate = true;
+            bool _sameNumber, _firstCheckSameNumber = true, _doNotCalculate = true;
 
             public override double Calculate(int n)
             {
@@ -46,10 +46,10 @@ namespace FunctionCalculation
                 {
                     if (_numberSorting[i] == n)
                     {
-                        doNotCalculate = false;
-                        if (firstCheckSameNumber == true)
+                        _doNotCalculate = false;
+                        if (_firstCheckSameNumber == true)
                         {
-                            firstCheckSameNumber = false;
+                            _firstCheckSameNumber = false;
                             return 0;
                         }
                     }
@@ -60,9 +60,9 @@ namespace FunctionCalculation
                     Array.Clear(_numberSorting, sizeOfArray - 1, 1);
                 }
                 _numberSorting[index] = n;
-                sameNumber = false;
+                _sameNumber = false;
 
-                if (doNotCalculate)
+                if (_doNotCalculate)
                 {
                     _functionSum = 0;
                     for (int j = 0; j <= n; j++)
@@ -75,7 +75,7 @@ namespace FunctionCalculation
                     _sumBuffer[index] = _functionSum;
 
                 }
-                doNotCalculate = true;
+                _doNotCalculate = true;
 
                 for (int i = 0; i < _numberSorting.Length; i++)
                 {
@@ -83,12 +83,20 @@ namespace FunctionCalculation
                     {
                         if (_numberSorting[j] == 0)
                         {
+                            _tempNumber = _numberSorting[j];
+                            _numberSorting[j] = _numberSorting[index];
+                            _numberSorting[j] = _tempNumber;
+                            _sameNumber = true;
                             break;
                         }
                         if (_numberSorting[index] == _numberSorting[j] && index != j)
                         {
                             if (j == 0)
                             {
+                                _tempNumber = _numberSorting[j];
+                                _numberSorting[j] = _numberSorting[index];
+                                _numberSorting[j] = _tempNumber;
+                                _sameNumber = true;
                                 break;
                             }
                             else
@@ -96,7 +104,7 @@ namespace FunctionCalculation
                                 _tempNumber = _numberSorting[j - 1];
                                 _numberSorting[j - 1] = _numberSorting[index];
                                 _numberSorting[j] = _tempNumber;
-                                sameNumber = true;
+                                _sameNumber = true;
 
                                 _tempSumBuffer = _sumBuffer[j - 1];
                                 _sumBuffer[j - 1] = _sumBuffer[index];
@@ -117,7 +125,7 @@ namespace FunctionCalculation
                             _sumBuffer[i] = _tempSumBuffer;
                         }
                     }
-                    if (sameNumber == true)
+                    if (_sameNumber == true)
                     {
                         break;
                     }
