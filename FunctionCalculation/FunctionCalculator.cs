@@ -9,7 +9,7 @@ namespace FunctionCalculation
         static void Main(string[] args)
         {
             Function functionCalculation = new BaseFunctionCalculation();
-            functionCalculation.SetCacheSize(3);
+            functionCalculation.SetCacheSize(4);
 
             int[] calculateNumber = { 5, 20, 10, 5, 5, 5, 2, 3 };
             int[] getNumber = { 0, 1, 2, 3 };
@@ -26,7 +26,7 @@ namespace FunctionCalculation
 
         abstract class Function
         {
-            public static int sizeOfArray;
+            public static int sizeOfArray, sizeOfNumberArray;
             public static int index = 0;
             public abstract double Calculate(int n);
             public abstract void SetCacheSize(int size);
@@ -35,59 +35,92 @@ namespace FunctionCalculation
         class BaseFunctionCalculation : Function
         {
             double[] _sumBuffer = new double[index];
-            double _functionSum;
-            int temp;
-            int[] numberSorting = new int[3];
-            bool sameNumber, firstCheckSameNumber = true;
+            double _functionSum, _tempSumBuffer;
+            int _tempNumber;
+            int[] _numberSorting = new int[sizeOfNumberArray];
+            bool sameNumber, firstCheckSameNumber = true, doNotCalculate = true;
 
             public override double Calculate(int n)
             {
                 for (int i = 0; i < index; i++)
                 {
-                    if (numberSorting[i] == n && firstCheckSameNumber == true)
+                    if (_numberSorting[i] == n)
                     {
-                        firstCheckSameNumber = false;
-                        return 0;
+
+                        doNotCalculate = false;
+                        if (firstCheckSameNumber == true)
+                        {
+                            firstCheckSameNumber = false;
+                            return 0;
+                        }
                     }
                 }
-                if (index > 2)
+                if (index > sizeOfNumberArray - 1)
                 {
-                    index = 2;
-                    Array.Clear(numberSorting, 2, 1);
+                    index = sizeOfNumberArray - 1;
+                    Array.Clear(_numberSorting, sizeOfNumberArray - 1, 1);
                 }
-                numberSorting[index] = n;
+                _numberSorting[index] = n;
                 sameNumber = false;
-                for (int i = 0; i < numberSorting.Length; i++)
+
+                _functionSum = 0;
+
+                if (doNotCalculate)
                 {
-                    for (int j = i; j < numberSorting.Length; j++)
+                    for (int j = 0; j <= n; j++)
                     {
-                        if (numberSorting[j] == 0)
+                        double radiansValue = (j * (Math.PI)) / 180;
+                        var sinValue = Math.Sin(radiansValue) * j;
+                        _functionSum += sinValue;
+
+                    }
+                    _sumBuffer[index] = _functionSum;
+
+                    doNotCalculate = true;
+                }
+
+                for (int i = 0; i < _numberSorting.Length; i++)
+                {
+                    for (int j = i; j < _numberSorting.Length; j++)
+                    {
+                        if (_numberSorting[j] == 0)
                         {
                             break;
                         }
-                        if (numberSorting[index] == numberSorting[j] && index != j)
+                        if (_numberSorting[index] == _numberSorting[j] && index != j)
                         {
                             if (j == 0)
                             {
-                                temp = numberSorting[j];
-                                numberSorting[j] = numberSorting[index];
-                                numberSorting[j] = temp;
+                                _tempNumber = _numberSorting[j];
+                                _numberSorting[j] = _numberSorting[index];
+                                _numberSorting[j] = _tempNumber;
                                 sameNumber = true;
+
+                                _tempSumBuffer = _sumBuffer[j];
+                                _sumBuffer[j] = _sumBuffer[i];
+                                _sumBuffer[i] = _tempSumBuffer;
                                 break;
                             }
-                            temp = numberSorting[j - 1];
-                            numberSorting[j - 1] = numberSorting[index];
-                            numberSorting[j] = temp;
+                            _tempNumber = _numberSorting[j - 1];
+                            _numberSorting[j - 1] = _numberSorting[index];
+                            _numberSorting[j] = _tempNumber;
                             sameNumber = true;
+
+                            _tempSumBuffer = _sumBuffer[j];
+                            _sumBuffer[j] = _sumBuffer[i];
+                            _sumBuffer[i] = _tempSumBuffer;
                             break;
                         }
-                        if (numberSorting[i] != numberSorting[j] && j == index)
+                        if (_numberSorting[i] != _numberSorting[j] && j == index)
                         {
 
-                            temp = numberSorting[j];
-                            numberSorting[j] = numberSorting[i];
-                            numberSorting[i] = temp;
+                            _tempNumber = _numberSorting[j];
+                            _numberSorting[j] = _numberSorting[i];
+                            _numberSorting[i] = _tempNumber;
 
+                            _tempSumBuffer = _sumBuffer[j];
+                            _sumBuffer[j] = _sumBuffer[i];
+                            _sumBuffer[i] = _tempSumBuffer;
                         }
                     }
                     if (sameNumber == true)
@@ -95,18 +128,6 @@ namespace FunctionCalculation
                         break;
                     }
                 }
-
-                _functionSum = 0;
-       
-
-                for (int j = 0; j <= n; j++)
-                {
-                    double radiansValue = (j * (Math.PI)) / 180;
-                    var sinValue = Math.Sin(radiansValue) * j;
-                    _functionSum += sinValue;
-
-                }
-                _sumBuffer[index] = _functionSum;
 
                 index++;
                 return 1;
@@ -116,14 +137,15 @@ namespace FunctionCalculation
             {
                 _sumBuffer = new double[size];
                 sizeOfArray = _sumBuffer.Length;
-
+                _numberSorting = new int[size];
+                sizeOfNumberArray = _numberSorting.Length;
             }
 
             public override int GetCacheElement(int index)
             {
                 try
                 {
-                    Console.WriteLine(numberSorting[index]);
+                    Console.WriteLine(_numberSorting[index]);
                 }
                 catch (Exception)
                 {
